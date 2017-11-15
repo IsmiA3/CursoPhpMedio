@@ -11,12 +11,12 @@ class receta_modelo{
         $this->base_datos=$base_datos;
         $this->usuario=$usuario;
         $this->password=$password;
+        $this->conectar();
     }
     
     public function conectar(){
         try {
-            $this->base_datos_PDO=new PDO("mysql:host=$this->servidor;dbname=$this->base_datos",$this->usuario,$this->password);
-            echo "CORRECTO";
+            $this->base_datos_PDO=new PDO("mysql:host=$this->servidor;dbname=$this->base_datos",$this->usuario,$this->password); 
         }catch (PDOException $e){
             echo $e->getMessage();
         }
@@ -27,8 +27,11 @@ class receta_modelo{
         $sentencia->execute();
         return $sentencia->fetchAll();
     }
+    public function obtener_receta($id){
+        $sql="SELECT * FROM recetas where id=$id order by fecha";
+        $sentencia = $this->base_datos_PDO->prepare($sql);
+        $sentencia->execute();
+        return $sentencia->fetchAll();
+    }
 }
 
-$prueba = new receta_modelo("localhost", "recetas", "alumno", "alumno");
-$prueba->conectar();
-var_dump($prueba->obtener_recetas());
